@@ -7,6 +7,7 @@ const Container = styled.div`
     padding: 12px 24px;
     width: min-content;
     min-width: 322px;
+    height: 100vh;
 `
 export default function Swimlane(props) {
   return (

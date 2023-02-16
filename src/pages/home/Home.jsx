@@ -32,11 +32,11 @@ export default function Home() {
       });
     },
     {
-      onSuccess: () => tickets.refetch(),
-      onSettled: () => {
+      onSuccess: () => {
         ticketNameField.current = "";
         ticketPriorityField.current = null;
         assignedToField.current = "";
+        tickets.refetch()
         setOpenModal(false);
       },
     }
@@ -49,14 +49,29 @@ export default function Home() {
     <div>
       <h1>
         This is supposed to look like notion (eventually)
-        <Button variant="contained" onClick={() => setOpenModal(true)}>Create Ticket</Button>
+        <Button variant="contained" onClick={() => setOpenModal(true)}>
+          Create Ticket
+        </Button>
       </h1>
 
       <Box display={"flex"}>
         <Swimlane title={"Not Started"}>
+          {!!tickets.isLoading && <CircularProgress color="success" />}
+          {!!tickets.isError && (
+            <Box>
+              Some error occurred, try refreshing{" "}
+              <Button variant="contained" onClick={() => tickets.refetch()}>
+                Refresh
+              </Button>
+            </Box>
+          )}
           {tickets.data?.tickets?.map((ticket) => (
             <Ticket key={ticket._id} {...ticket} refetch={tickets?.refetch} />
           ))}
+
+          <Button variant="contained" onClick={() => setOpenModal(true)} fullWidth>
+            Create Ticket
+          </Button>
         </Swimlane>
         <Swimlane title={"In Progress"}></Swimlane>
         <Swimlane title={"In Review"}></Swimlane>
@@ -110,6 +125,9 @@ export default function Home() {
               "Create Ticket"
             )}
           </Button>
+          {!!createTicket.isError && <Box>An error occurred. Refresh maybe? <Button onClick={() => createTicket.mutate()} variant="contained">
+            Retry Adding ticket
+          </Button></Box>}
         </Box>
       </Modal>
     </div>

@@ -8,7 +8,8 @@ function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: Infinity,
+        retry: 5,
+        refetchInterval: 5000,
       },
     },
   })
