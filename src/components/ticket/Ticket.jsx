@@ -49,25 +49,30 @@ const FlexBox = styled.div`
   width: 100%;
 `;
 export default function Ticket(props) {
-  const deleteTicket = useMutation([
-    "delete-ticket"],
+  const deleteTicket = useMutation(
+    ["delete-ticket"],
     async () => {
       await api.delete(`/ticket/delete?id=${props._id}`);
     },
     {
       onSuccess: () => {
-        props.refetch()
-      }
+        props.refetch();
+      },
     }
   );
   return (
-    <Container>
+    <Container draggable>
       <FlexBox>
         <button onClick={() => deleteTicket.mutate()}>x</button>
       </FlexBox>
       <TicketName>{props.ticketName}</TicketName>
       <Priority>P{props.ticketPriority}</Priority>
-      Assigned To: <Participant>{props.assignedTo}</Participant>
+      <Participant>
+        Assigned To: <b>{props.assignedTo}</b>
+      </Participant>
+      <Participant>
+        Created At: <b>{new Date(props?.createdAt).toLocaleDateString()}</b>
+      </Participant>
     </Container>
   );
 }
