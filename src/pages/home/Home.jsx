@@ -4,7 +4,14 @@ import Ticket from "../../components/ticket/Ticket";
 import { api } from "../../config";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { Button, FormControl, Grid, Input, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  Grid,
+  Input,
+  TextField,
+} from "@mui/material";
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(false);
@@ -40,9 +47,9 @@ export default function Home() {
   return (
     <div>
       <h1>This is supposed to look like notion (eventually)</h1>
-      <Grid container width={'100%'} gap={4}>
+      <Grid container width={"100%"} gap={4}>
         {tickets.data?.tickets?.map((ticket) => (
-          <Grid item xs="12" sm='6' lg={'3'} xl={'2'} key={ticket._id}>
+          <Grid item xs="12" sm="6" lg={"3"} xl={"2"} key={ticket._id}>
             <Ticket {...ticket} refetch={tickets?.refetch} />
           </Grid>
         ))}
@@ -89,7 +96,11 @@ export default function Home() {
             }}
           />
           <Button onClick={() => createTicket.mutate()} variant="contained">
-            Create Ticket
+            {!!createTicket.isLoading ? (
+              <CircularProgress color="inherit" />
+            ) : (
+              "Create Ticket"
+            )}
           </Button>
         </Box>
       </Modal>
