@@ -8,7 +8,7 @@ const Container = styled.div`
   border-radius: 17px;
   width: 240px;
   padding: 16px;
-  margin: 16px;
+  margin: 16px 0;
 `;
 const TicketName = styled.div`
   font-style: normal;

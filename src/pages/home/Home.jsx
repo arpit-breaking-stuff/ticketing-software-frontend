@@ -12,6 +12,7 @@ import {
   Input,
   TextField,
 } from "@mui/material";
+import Swimlane from "../../components/swimlane/Swimlane";
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(false);
@@ -46,14 +47,21 @@ export default function Home() {
   const assignedToField = useRef("");
   return (
     <div>
-      <h1>This is supposed to look like notion (eventually)</h1>
-      <Grid container width={"100%"} gap={4}>
-        {tickets.data?.tickets?.map((ticket) => (
-          <Grid item xs="12" sm="6" lg={"3"} xl={"2"} key={ticket._id}>
-            <Ticket {...ticket} refetch={tickets?.refetch} />
-          </Grid>
-        ))}
-      </Grid>
+      <h1>
+        This is supposed to look like notion (eventually)
+        <Button variant="contained" onClick={() => setOpenModal(true)}>Create Ticket</Button>
+      </h1>
+
+      <Box display={"flex"}>
+        <Swimlane title={"Not Started"}>
+          {tickets.data?.tickets?.map((ticket) => (
+            <Ticket key={ticket._id} {...ticket} refetch={tickets?.refetch} />
+          ))}
+        </Swimlane>
+        <Swimlane title={"In Progress"}></Swimlane>
+        <Swimlane title={"In Review"}></Swimlane>
+        <Swimlane title={"Completed"}></Swimlane>
+      </Box>
 
       <Modal
         open={openModal}
@@ -104,7 +112,6 @@ export default function Home() {
           </Button>
         </Box>
       </Modal>
-      <button onClick={() => setOpenModal(true)}>Create Ticket</button>
     </div>
   );
 }
