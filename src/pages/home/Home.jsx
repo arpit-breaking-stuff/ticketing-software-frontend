@@ -41,7 +41,7 @@ export default function Home() {
     {
       onSuccess: () => {
         newSwimlane.current = "";
-        swimlanes?.refetch()
+        swimlanes?.refetch();
       },
     }
   );
@@ -72,9 +72,9 @@ export default function Home() {
   const ticketPriorityField = useRef(0);
   const assignedToField = useRef("");
   return (
-    <div>
-      <Box display={'flex'} gap='24px' marginBottom={'24px'}>
-      <h3>Add Column</h3>
+    <Box padding={'24px'}>
+      <Box display={"flex"} gap="24px" marginBottom={"24px"}>
+        <h3>Add Column</h3>
         <input
           ref={newSwimlane}
           onChange={(e) => {
@@ -85,7 +85,7 @@ export default function Home() {
           <b>+</b>
         </Button>
       </Box>
-      <Box display={"flex"}>
+      <Box display={"flex"} gap={"12px"}>
         {swimlanes?.data?.ticketStatus?.map((status) => (
           <Swimlane key={status?._id} title={status?.ticketStatus}>
             <Button
@@ -206,6 +206,6 @@ export default function Home() {
           )}
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 }

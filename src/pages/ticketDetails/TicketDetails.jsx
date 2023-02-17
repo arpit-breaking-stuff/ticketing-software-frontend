@@ -4,10 +4,16 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../config";
 import { copyToClipboard } from "../../utils/copyToClipboard";
+import styled from 'styled-components'
+
+const TicketContainer = styled.div`
+  border-radius: 12px;
+  border: 1px solid black;
+  padding: 24px;
+`
 
 export default function TicketDetails() {
   const { ticketId } = useParams("ticketId");
-  console.log();
   const ticket = useQuery(
     ["get-one-ticket"],
     async () => {
@@ -18,13 +24,12 @@ export default function TicketDetails() {
       });
       return response?.data;
     },
-    {}
   );
-  console.log(ticket?.data?.tickets)
   return ticket?.isLoading ? (
     <CircularProgress color="success" />
   ) : (
-    <div>
+    <TicketContainer>
+      <button>Edit</button>
       <h1>{ticket?.data?.tickets?.ticketName}<Button variant='contained' onClick={() => copyToClipboard(window.location.href)}>
         Copy URL
       </Button></h1>
@@ -33,11 +38,11 @@ export default function TicketDetails() {
         Created at{" "}{new Date(ticket?.data?.tickets?.createdAt)?.toLocaleDateString()}
       </h2>
       <h2>
-        Assigned to{" "}{ticket?.data?.tickets?.assignedTo}
+        Assigned to:{" "}{ticket?.data?.tickets?.assignedTo}
       </h2>
       <h2>
         Status:{" "}{ticket?.data?.tickets?.ticketStatus}
       </h2>
-    </div>
+    </TicketContainer>
   );
 }
