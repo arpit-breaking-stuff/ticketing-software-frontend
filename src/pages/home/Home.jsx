@@ -9,7 +9,7 @@ import Swimlane from "../../components/swimlane/Swimlane";
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(false);
-  const [createdTicketStatus, setCreatedTicketStatus] = useState("");
+  const [selectedTicketStatus, setSelectedTicketStatus] = useState("");
 
   const tickets = useQuery(["fetch-all-tickets"], async () => {
     const tickets = await api.get("/ticket/get");
@@ -25,8 +25,9 @@ export default function Home() {
     {
       enabled: !!tickets?.data,
       onSuccess: (data) => {
-        console.log(data?.ticketStatus[0]?.ticketStatus)
-        setCreatedTicketStatus(data?.ticketStatus[0]?.ticketStatus)},
+        console.log(data?.ticketStatus[0]?.ticketStatus);
+        setSelectedTicketStatus(data?.ticketStatus[0]?.ticketStatus);
+      },
     }
   );
 
@@ -40,6 +41,7 @@ export default function Home() {
     {
       onSuccess: () => {
         newSwimlane.current = "";
+        swimlanes?.refetch()
       },
     }
   );
@@ -71,21 +73,27 @@ export default function Home() {
   const assignedToField = useRef("");
   return (
     <div>
-      <input
-        ref={newSwimlane}
-        onChange={(e) => {
-          newSwimlane.current = e.target.value;
-        }}
-      ></input>
-      <Button variant="contained" onClick={() => createTicketStatus.mutate()}>
-        <b>+</b>
-      </Button>
+      <Box display={'flex'} gap='24px' marginBottom={'24px'}>
+      <h3>Add Column</h3>
+        <input
+          ref={newSwimlane}
+          onChange={(e) => {
+            newSwimlane.current = e.target.value;
+          }}
+        ></input>
+        <Button variant="contained" onClick={() => createTicketStatus.mutate()}>
+          <b>+</b>
+        </Button>
+      </Box>
       <Box display={"flex"}>
         {swimlanes?.data?.ticketStatus?.map((status) => (
           <Swimlane key={status?._id} title={status?.ticketStatus}>
             <Button
               variant="contained"
-              onClick={() => setOpenModal(true)}
+              onClick={() => {
+                setSelectedTicketStatus(status?.ticketStatus);
+                setOpenModal(true);
+              }}
               fullWidth
             >
               Create Ticket
@@ -99,9 +107,17 @@ export default function Home() {
                 </Button>
               </Box>
             )}
-            {tickets?.data?.tickets?.filter(ticket => ticket?.ticketStatus === status?.ticketStatus)?.map((ticket) => (
-              <Ticket key={ticket._id} {...ticket} refetch={tickets?.refetch} />
-            ))}
+            {tickets?.data?.tickets
+              ?.filter(
+                (ticket) => ticket?.ticketStatus === status?.ticketStatus
+              )
+              ?.map((ticket) => (
+                <Ticket
+                  key={ticket._id}
+                  {...ticket}
+                  refetch={tickets?.refetch}
+                />
+              ))}
           </Swimlane>
         ))}
       </Box>
@@ -155,12 +171,11 @@ export default function Home() {
           <Box display="flex" gap={"40px"}>
             <label>Status: </label>
             <Select
-              value={createdTicketStatus}
-              onChange={(e) =>{
-                console.log(e.target.value)
-                setCreatedTicketStatus(e.target.value)
-              }
-            }
+              value={selectedTicketStatus}
+              onChange={(e) => {
+                console.log(e.target.value);
+                setSelectedTicketStatus(e.target.value);
+              }}
             >
               {swimlanes?.data?.ticketStatus?.map((i) => (
                 <MenuItem value={i?.ticketStatus} key={i?._id}>
@@ -171,7 +186,7 @@ export default function Home() {
           </Box>
           <Button
             onClick={() =>
-              createTicket.mutate({ ticketStatus: createdTicketStatus })
+              createTicket.mutate({ ticketStatus: selectedTicketStatus })
             }
             variant="contained"
           >
