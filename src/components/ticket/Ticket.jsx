@@ -1,14 +1,20 @@
-import { QueryClient, useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { api } from "../../config";
 
-const Container = styled.div`
+const Container = styled(Link)`
+  all: inherit;
   background: #e0e4ea;
   border-radius: 17px;
   width: 240px;
   padding: 16px;
   margin: 16px 0;
+  
+  :hover{
+    cursor: pointer;
+  }
 `;
 const TicketName = styled.div`
   font-style: normal;
@@ -61,7 +67,7 @@ export default function Ticket(props) {
     }
   );
   return (
-    <Container draggable>
+    <Container to={`/ticket/${props._id}`}>
       <FlexBox>
         <button onClick={() => deleteTicket.mutate()}>x</button>
       </FlexBox>

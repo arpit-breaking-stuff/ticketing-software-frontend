@@ -7,10 +7,6 @@ import Box from "@mui/material/Box";
 import {
   Button,
   CircularProgress,
-  FormControl,
-  Grid,
-  Input,
-  TextField,
 } from "@mui/material";
 import Swimlane from "../../components/swimlane/Swimlane";
 
@@ -25,7 +21,7 @@ export default function Home() {
     ["create-ticket"],
     async () => {
       console.log(ticketNameField.current);
-      const res = await api.post("/ticket/add", {
+      await api.post("/ticket/add", {
         ticketName: ticketNameField.current,
         ticketPriority: ticketPriorityField.current,
         assignedTo: assignedToField.current,
@@ -47,13 +43,6 @@ export default function Home() {
   const assignedToField = useRef("");
   return (
     <div>
-      <h1>
-        This is supposed to look like notion (eventually)
-        <Button variant="contained" onClick={() => setOpenModal(true)}>
-          Create Ticket
-        </Button>
-      </h1>
-
       <Box display={"flex"}>
         <Swimlane title={"Not Started"}>
           {!!tickets.isLoading && <CircularProgress color="success" />}
@@ -73,7 +62,9 @@ export default function Home() {
             Create Ticket
           </Button>
         </Swimlane>
-        <Swimlane title={"In Progress"}></Swimlane>
+        <Swimlane title={"In Progress"}>
+          
+        </Swimlane>
         <Swimlane title={"In Review"}></Swimlane>
         <Swimlane title={"Completed"}></Swimlane>
       </Box>
