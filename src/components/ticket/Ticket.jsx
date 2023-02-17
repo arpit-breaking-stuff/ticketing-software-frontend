@@ -4,19 +4,15 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { api } from "../../config";
 
-const Container = styled(Link)`
-  all: inherit;
+const Container = styled.div`
   background: #e0e4ea;
   border-radius: 17px;
   width: 240px;
   padding: 16px;
   margin: 16px 0;
-  
-  :hover{
-    cursor: pointer;
-  }
 `;
-const TicketName = styled.div`
+const TicketName = styled(Link)`
+  text-decoration: none;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -24,6 +20,10 @@ const TicketName = styled.div`
   /* identical to box height, or 125% */
 
   color: #000000;
+
+  :hover {
+    text-decoration: underline;
+  }
 `;
 
 const Priority = styled.div`
@@ -67,11 +67,11 @@ export default function Ticket(props) {
     }
   );
   return (
-    <Container to={`/ticket/${props._id}`}>
+    <Container>
       <FlexBox>
         <button onClick={() => deleteTicket.mutate()}>x</button>
       </FlexBox>
-      <TicketName>{props.ticketName}</TicketName>
+      <TicketName to={`/ticket/${props._id}`}>{props.ticketName}</TicketName>
       <Priority>P{props.ticketPriority}</Priority>
       <Participant>
         Assigned To: <b>{props.assignedTo}</b>

@@ -20,6 +20,7 @@ export default function TicketDetails() {
     },
     {}
   );
+  console.log(ticket?.data?.tickets)
   return ticket?.isLoading ? (
     <CircularProgress color="success" />
   ) : (
@@ -33,6 +34,9 @@ export default function TicketDetails() {
       </h2>
       <h2>
         Assigned to{" "}{ticket?.data?.tickets?.assignedTo}
+      </h2>
+      <h2>
+        Status:{" "}{ticket?.data?.tickets?.ticketStatus}
       </h2>
     </div>
   );

@@ -10,7 +10,6 @@ function App() {
     defaultOptions: {
       queries: {
         retry: 5,
-        refetchInterval: 5000,
       },
     },
   })

@@ -1,15 +1,15 @@
 import React from "react";
 
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Container = styled.div`
-    border: 1px solid black;
-    padding: 12px 24px;
-    width: min-content;
-    min-width: 322px;
-    min-height: 100vh;
-    max-height: fit-content;
-`
+  border: 1px solid black;
+  padding: 12px 24px;
+  width: min-content;
+  min-width: 322px;
+  min-height: 100vh;
+  max-height: fit-content;
+`;
 export default function Swimlane(props) {
   return (
     <Container>
