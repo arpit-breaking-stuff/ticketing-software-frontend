@@ -1,8 +1,14 @@
+import Clear from "@mui/icons-material/Clear";
+import { Box } from "@mui/system";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { api } from "../../config";
+import { PriorityColors } from "../../ui-components/colors/PriorityColors";
+import { Text1, Title3, Title3css } from "../../ui-components/typography";
+import { IconButtonWrappers } from "../swimlane/Swimlane";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const Container = styled.div`
   background: #e0e4ea;
@@ -12,48 +18,31 @@ const Container = styled.div`
   margin: 16px 0;
 `;
 const TicketName = styled(Link)`
-  text-decoration: none;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px;
-  /* identical to box height, or 125% */
-
-  color: #000000;
+  all: unset;
+  ${Title3css};
 
   :hover {
+    cursor: pointer;
     text-decoration: underline;
   }
 `;
 
 const Priority = styled.div`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  /* identical to box height, or 143% */
-
-  border: 2px solid black;
+  border-radius: 4px;
+  background-color: ${(props) => PriorityColors.get(props.priority)};
   width: min-content;
   padding: 4px;
   color: #000000;
 `;
 
-const Participant = styled.div`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  /* identical to box height, or 143% */
+export function PriorityBox(props) {
+  return (
+    <Priority priority={props.priority}>
+      <Text1>P{props.priority}</Text1>
+    </Priority>
+  );
+}
 
-  color: #000000;
-`;
-
-const FlexBox = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-`;
 export default function Ticket(props) {
   const deleteTicket = useMutation(
     ["delete-ticket"],
@@ -68,17 +57,23 @@ export default function Ticket(props) {
   );
   return (
     <Container>
-      <FlexBox>
-        <button onClick={() => deleteTicket.mutate()}>x</button>
-      </FlexBox>
-      <TicketName to={`/ticket/${props._id}`}>{props.ticketName}</TicketName>
-      <Priority>P{props.ticketPriority}</Priority>
-      <Participant>
-        Assigned To: <b>{props.assignedTo}</b>
-      </Participant>
-      <Participant>
-        Created At: <b>{new Date(props?.createdAt).toLocaleDateString()}</b>
-      </Participant>
+      <Box display="flex" justifyContent={"flex-end"}>
+        <IconButtonWrappers onClick={() => deleteTicket.mutate()}>
+          <ClearIcon />
+        </IconButtonWrappers>
+      </Box>
+      <Box display={'flex'} flexDirection={'column'}>
+        <TicketName to={`/ticket/${props._id}`}>
+          <Title3>{props.ticketName}</Title3>
+        </TicketName>
+        <PriorityBox priority={props.ticketPriority} />
+        <Text1>
+          Assigned To: <b>{props.assignedTo}</b>
+        </Text1>
+        <Text1>
+          Created At: <b>{new Date(props?.createdAt).toLocaleDateString()}</b>
+        </Text1>
+      </Box>
     </Container>
   );
 }

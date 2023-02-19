@@ -25,9 +25,9 @@ export default function Home() {
     {
       enabled: !!tickets?.data,
       onSuccess: (data) => {
-        console.log(data?.ticketStatus[0]?.ticketStatus);
-        setSelectedTicketStatus(data?.ticketStatus[0]?.ticketStatus);
-      },
+        console.log(data?.ticketStatus[0]);
+        setSelectedTicketStatus(data?.ticketStatus[0]);
+      }
     }
   );
 
@@ -72,7 +72,7 @@ export default function Home() {
   const ticketPriorityField = useRef(0);
   const assignedToField = useRef("");
   return (
-    <Box padding={'24px'}>
+    <Box padding={"24px"}>
       <Box display={"flex"} gap="24px" marginBottom={"24px"}>
         <h3>Add Column</h3>
         <input
@@ -87,7 +87,15 @@ export default function Home() {
       </Box>
       <Box display={"flex"} gap={"12px"}>
         {swimlanes?.data?.ticketStatus?.map((status) => (
-          <Swimlane key={status?._id} title={status?.ticketStatus}>
+          <Swimlane
+            key={status?._id}
+            _id={status?._id}
+            title={status?.ticketStatus}
+            refetchSwimlane={() => {
+              swimlanes?.refetch();
+              tickets?.refetch();
+            }}
+          >
             <Button
               variant="contained"
               onClick={() => {
@@ -102,6 +110,7 @@ export default function Home() {
             {!!tickets.isError && (
               <Box>
                 Some error occurred, try refreshing{" "}
+                {createTicket?.error?.response?.data?.message}
                 <Button variant="contained" onClick={() => tickets.refetch()}>
                   Refresh
                 </Button>
@@ -173,12 +182,11 @@ export default function Home() {
             <Select
               value={selectedTicketStatus}
               onChange={(e) => {
-                console.log(e.target.value);
                 setSelectedTicketStatus(e.target.value);
               }}
             >
               {swimlanes?.data?.ticketStatus?.map((i) => (
-                <MenuItem value={i?.ticketStatus} key={i?._id}>
+                <MenuItem value={i} key={i?._id}>
                   {i?.ticketStatus}
                 </MenuItem>
               ))}
@@ -186,7 +194,7 @@ export default function Home() {
           </Box>
           <Button
             onClick={() =>
-              createTicket.mutate({ ticketStatus: selectedTicketStatus })
+              createTicket.mutate({ ticketStatus: selectedTicketStatus?._id })
             }
             variant="contained"
           >
