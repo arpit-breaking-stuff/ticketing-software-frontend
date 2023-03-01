@@ -15,12 +15,10 @@ import Swimlane from "../../components/swimlane/Swimlane";
 
 function enabledSorting(state, action) {
   if (action.field === "TICKET_NAME") {
-    console.log({ ...state, ticketName: action.checked });
     return { ...state, ticketName: action.checked };
   }
 
   if (action.field === "TICKET_PRIORITY") {
-    console.log({ ...state, ticketPriority: action.checked });
     return { ...state, ticketPriority: action.checked };
   }
 }
