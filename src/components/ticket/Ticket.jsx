@@ -13,7 +13,6 @@ import ClearIcon from "@mui/icons-material/Clear";
 const Container = styled.div`
   background: #e0e4ea;
   border-radius: 17px;
-  width: 240px;
   padding: 16px;
   margin: 16px 0;
 `;

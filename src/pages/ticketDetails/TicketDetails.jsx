@@ -12,6 +12,12 @@ const TicketContainer = styled.div`
   padding: 24px;
 `;
 
+const PageWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 5%;
+`
+
 export default function TicketDetails() {
   const { ticketId } = useParams("ticketId");
   const ticket = useQuery(
@@ -31,24 +37,24 @@ export default function TicketDetails() {
   return ticket?.isLoading ? (
     <CircularProgress color="success" />
   ) : (
-    <TicketContainer>
-      <button>Edit</button>
-      <h1>
-        {ticket?.data?.tickets[0]?.ticketName}
-        <Button
-          variant="contained"
-          onClick={() => copyToClipboard(window.location.href)}
-        >
-          Copy URL
-        </Button>
-      </h1>
-
-      <h2>
-        Created at{" "}
-        {new Date(ticket?.data?.tickets[0]?.createdAt)?.toLocaleDateString()}
-      </h2>
-      <h2>Assigned to: {ticket?.data?.tickets[0]?.assignedTo}</h2>
-      <h2>Status: {ticket?.data?.tickets[0]?.ticketStatus}</h2>
-    </TicketContainer>
+    <PageWrapper>
+      <TicketContainer>
+        <h1>
+          {ticket?.data?.tickets[0]?.ticketName}
+          {/* <Button
+            variant="contained"
+            onClick={() => copyToClipboard(window.location.href)}
+          >
+            Copy URL
+          </Button> */}
+        </h1>
+        <h2>
+          Created at{" "}
+          {new Date(ticket?.data?.tickets[0]?.createdAt)?.toLocaleDateString()}
+        </h2>
+        <h2>Assigned to: {ticket?.data?.tickets[0]?.assignedTo}</h2>
+        <h2>Status: {ticket?.data?.tickets[0]?.ticketStatus}</h2>
+      </TicketContainer>
+    </PageWrapper>
   );
 }

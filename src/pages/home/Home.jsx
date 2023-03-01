@@ -1,15 +1,41 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { useRef, useState } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import Ticket from "../../components/ticket/Ticket";
 import { api } from "../../config";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { Button, CircularProgress, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import Swimlane from "../../components/swimlane/Swimlane";
+
+function enabledSorting(state, action) {
+  if (action.field === "TICKET_NAME") {
+    console.log({ ...state, ticketName: action.checked });
+    return { ...state, ticketName: action.checked };
+  }
+
+  if (action.field === "TICKET_PRIORITY") {
+    console.log({ ...state, ticketPriority: action.checked });
+    return { ...state, ticketPriority: action.checked };
+  }
+}
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedTicketStatus, setSelectedTicketStatus] = useState("");
+
+  const [enabledSortingFilters, dispatchSortingEnabled] = useReducer(
+    enabledSorting,
+    {
+      ticketName: false,
+      ticketPriority: false,
+    }
+  );
 
   const tickets = useQuery(["fetch-all-tickets"], async () => {
     const tickets = await api.get("/ticket/get");
@@ -25,7 +51,6 @@ export default function Home() {
     {
       enabled: !!tickets?.data,
       onSuccess: (data) => {
-        console.log(data?.ticketStatus[0]);
         setSelectedTicketStatus(data?.ticketStatus[0]);
       },
     }
@@ -88,6 +113,26 @@ export default function Home() {
         <Button variant="contained" onClick={() => createTicketStatus.mutate()}>
           <b>+</b>
         </Button>
+        <h3>Sort by Ticket Name</h3>
+        <Checkbox
+          checked={enabledSortingFilters.ticketName}
+          onChange={(e) =>
+            dispatchSortingEnabled({
+              field: "TICKET_NAME",
+              checked: e.target.checked,
+            })
+          }
+        />
+        {/* <h3>Sort by Ticket Priority</h3>
+        <Checkbox
+          checked={enabledSortingFilters.ticketPriority}
+          onChange={(e) =>
+            dispatchSortingEnabled({
+              field: "TICKET_PRIORITY",
+              checked: e.target.checked,
+            })
+          }
+        /> */}
       </Box>
       <Box display={"flex"} gap={"12px"}>
         {swimlanes?.data?.ticketStatus?.map((status) => (
@@ -125,6 +170,11 @@ export default function Home() {
             {tickets?.data?.tickets
               ?.filter(
                 (ticket) => ticket?.ticketStatus === status?.ticketStatus
+              )
+              ?.sort(
+                (a, b) =>
+                  enabledSortingFilters?.ticketName &&
+                  (a.ticketName > b.ticketName ? 1 : -1)
               )
               ?.map((ticket) => (
                 <Ticket
