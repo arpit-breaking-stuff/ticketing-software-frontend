@@ -27,7 +27,7 @@ export default function Home() {
       onSuccess: (data) => {
         console.log(data?.ticketStatus[0]);
         setSelectedTicketStatus(data?.ticketStatus[0]);
-      }
+      },
     }
   );
 
@@ -71,7 +71,11 @@ export default function Home() {
   const ticketNameField = useRef("");
   const ticketPriorityField = useRef(0);
   const assignedToField = useRef("");
-  return (
+  return !!swimlanes?.isLoading ? (
+    <div>
+      <CircularProgress sx={{ color: "black" }} />
+    </div>
+  ) : (
     <Box padding={"24px"}>
       <Box display={"flex"} gap="24px" marginBottom={"24px"}>
         <h3>Add Column</h3>
@@ -106,7 +110,9 @@ export default function Home() {
             >
               Create Ticket
             </Button>
-            {!!tickets.isLoading && <CircularProgress color="success" />}
+            {!!tickets.isLoading && (
+              <CircularProgress sx={{ color: "black" }} />
+            )}
             {!!tickets.isError && (
               <Box>
                 Some error occurred, try refreshing{" "}
